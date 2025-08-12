@@ -1,0 +1,54 @@
+.app-button {
+  position: relative;
+  display: inline-flex;
+  min-width: 64px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+  border-radius: 9999px;
+  font-weight: 500;
+  white-space: nowrap;
+  height: 40px;
+  user-select: none;
+  outline: none;
+  border: 1px solid;
+  font-size: 0.875rem;
+  letter-spacing: 0.006rem;
+  line-height: inherit;
+  background-color: rgba(0, 0, 0, 0);
+
+  &:not(.app-button--disabled) {
+    color: var(--sys-primary);
+    border-color: #847376;
+  }
+
+  &.app-button--disabled {
+    cursor: default;
+    pointer-events: none;
+    color: color-mix(in srgb, var(--sys-on-surface) 38%, transparent);
+    border-color: color-mix(in srgb, var(--sys-on-surface) 12%, transparent);
+  }
+
+  &:not(.app-button--disabled):hover {
+    cursor: pointer;
+  }
+}
+
+.app-button__ripple {
+  border-radius: inherit;
+  pointer-events: none;
+  position: absolute;
+  inset: -1px;
+  background-color: var(--sys-primary);
+  opacity: 0;
+}
+
+.app-button:not(.app-button--disabled):hover > .app-button__ripple {
+  opacity: 0.08;
+}
+
+.app-button__label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}

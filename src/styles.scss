@@ -1,0 +1,26 @@
+@use 'material-icons';
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+@layer reset {
+  * {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@layer variables {
+  :root {
+    --sys-primary: #ba005c;
+    --sys-error: #ba1a1a;
+    --sys-surface-variant: #f3dde1;
+    --sys-on-surface: #201a1b;
+  }
+}
+
+body {
+  width: 480px;
+  font-family: Roboto, sans-serif;
+  font-size: 1rem;
+  color: var(--sys-on-surface);
+}

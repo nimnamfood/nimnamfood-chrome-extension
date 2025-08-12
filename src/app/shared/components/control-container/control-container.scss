@@ -1,0 +1,99 @@
+.control-container {
+  position: relative;
+  display: inline-block;
+}
+
+.control-inner-container {
+  position: relative;
+  width: 100%;
+  padding: 0 8px;
+  border: 1px solid var(--sys-on-surface);
+  border-radius: 4px;
+  background-color: var(--sys-surface-variant);
+}
+
+.control-hover-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-color: var(--sys-on-surface);
+  opacity: 0;
+}
+
+.control-inner-container:hover .control-hover-overlay {
+  opacity: 0.08;
+}
+
+.control-container.control-container--focused .control-hover-overlay {
+  opacity: 0;
+}
+
+.control-infix {
+  position: relative;
+  width: 100%;
+  min-height: 36px;
+
+  /* Useful for textarea wrappers to avoid spacing between .control-infix and .control-error-wrapper */
+  display: flex;
+}
+
+.app-control {
+  position: relative;
+  width: 100%;
+  height: auto;
+  border: none;
+  color: var(--sys-on-surface);
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.031rem;
+  line-height: 1.5rem;
+  outline: none;
+  caret-color: var(--sys-primary);
+  background-color: transparent;
+}
+
+.control-subscript-wrapper {
+  position: relative;
+  width: 100%;
+  line-height: 1rem;
+  letter-spacing: 0.025rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+
+  &::before {
+    content: '';
+    display: inline-block;
+    height: 16px;
+  }
+}
+
+.control-error-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  padding: 0 8px;
+
+  .app-control-error {
+    display: block;
+    color: var(--sys-error);
+  }
+}
+
+.control-container.control-container--focused .control-inner-container {
+  border-color: var(--sys-primary);
+}
+
+.control-container.control-container--invalid {
+  .control-inner-container {
+    border-color: var(--sys-error);
+  }
+
+  &:not(.control-container.control-container--focused) .app-control {
+    color: var(--sys-error);
+  }
+}
+
+textarea.app-control {
+  resize: none;
+}

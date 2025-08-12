@@ -1,0 +1,42 @@
+<app-page heading="Importer une recette">
+  <app-section heading="Résumé">
+    <form [formGroup]="form" (ngSubmit)="import()" appForm>
+      <div class="h-container">
+        <div class="metadata-container">
+          <div class="row">
+            <app-control-container>
+              <input formControlName="name" appNativeControl />
+
+              @if (form.controls.name.invalid) {
+                <app-control-error>Requis</app-control-error>
+              }
+            </app-control-container>
+          </div>
+
+          <div class="row">
+            <label>#</label>
+            <app-portions-counter formControlName="portionsCount" />
+          </div>
+        </div>
+
+        <div class="illustration-wrapper">
+          <img [ngSrc]="scrapResult().illustrationUrl" fill priority alt="" draggable="false" />
+        </div>
+      </div>
+
+      <div class="row">
+        <app-control-container>
+          <textarea appNativeControl formControlName="instructions"></textarea>
+
+          @if (form.controls.instructions.invalid) {
+            <app-control-error>Requis</app-control-error>
+          }
+        </app-control-container>
+      </div>
+
+      <div class="submit-row">
+        <button [disabled]="loading() || form.invalid" type="submit" appButton>Importer</button>
+      </div>
+    </form>
+  </app-section>
+</app-page>

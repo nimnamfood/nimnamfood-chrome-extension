@@ -1,0 +1,17 @@
+<div class="control-wrapper">
+  <div class="control-inner-container" (click)="control().onContainerClick($event)">
+    <div class="control-hover-overlay"></div>
+
+    <div class="control-infix">
+      <ng-content></ng-content>
+    </div>
+  </div>
+
+  <div class="control-subscript-wrapper">
+    @if (errorChildren().length > 0) {
+      <div class="control-error-wrapper">
+        <ng-content select="app-control-error"></ng-content>
+      </div>
+    }
+  </div>
+</div>

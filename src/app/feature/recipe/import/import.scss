@@ -1,0 +1,26 @@
+.h-container {
+  display: flex;
+  align-items: start;
+  gap: 0.5rem;
+}
+
+.metadata-container {
+  flex: 1;
+}
+
+.illustration-wrapper {
+  position: relative;
+  margin: 0 auto;
+  width: 100px;
+  height: 130px;
+
+  > img {
+    border-radius: 5px;
+    object-fit: cover;
+    object-position: center;
+  }
+}
+
+textarea {
+  height: 200px;
+}
