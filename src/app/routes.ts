@@ -1,8 +1,16 @@
 import { Routes } from '@angular/router';
 import GlobalLayout from '@/layout/global-layout';
-import recipeRoutes from '@/feature/recipe/routes';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'r' },
-  { path: 'r', component: GlobalLayout, children: recipeRoutes },
+  {
+    path: '',
+    component: GlobalLayout,
+    loadChildren: () =>
+      Promise.all([
+        import('@/feature/recipe/routes'),
+        import('@/feature/settings/routes'),
+        import('./error/routes'),
+      ]).then(routes => routes.flatMap(({ default: route }) => route)),
+  },
 ];

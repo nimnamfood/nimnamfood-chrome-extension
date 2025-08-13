@@ -17,6 +17,7 @@ let nextUniqueId = 0;
 
 @Directive({
   selector: 'input[appNativeControl], textarea[appNativeControl]',
+  exportAs: 'nativeControl',
   providers: [
     {
       provide: Control,

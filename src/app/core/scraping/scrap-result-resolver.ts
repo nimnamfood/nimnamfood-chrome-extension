@@ -1,27 +1,17 @@
+import { inject } from '@angular/core';
+import { RedirectCommand, ResolveFn, Router } from '@angular/router';
+import { SettingsService } from '@/core/settings';
 import { ScrapResult } from './scrap-result';
-import { ScrapMessage } from '@/core/scraping/scrap-message';
+import { ScrapingService } from './scraping-service';
 
-export const scrapResultResolver = async () => {
-  const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
-
-  if (!activeTab.id) {
-    throw new Error('Could not get id of active tab.');
-  }
-
-  const scrapResult = await chrome.tabs.sendMessage<ScrapMessage, ScrapResult | null>(
-    activeTab.id,
-    {
-      code: 'scrap',
-      input: {
-        nameTarget: 'sc-dzdUWt',
-        illustrationTarget: 'sc-kNOvfK',
-        instructionsTarget: 'sc-gggxJe',
-      },
-    },
-  );
+export const scrapResultResolver: ResolveFn<ScrapResult> = async (): Promise<
+  ScrapResult | RedirectCommand
+> => {
+  const scrapInput = inject(SettingsService).settings();
+  const scrapResult = await inject(ScrapingService).scrap(scrapInput);
 
   if (!scrapResult) {
-    throw new Error('Scraping failed.');
+    return new RedirectCommand(inject(Router).parseUrl('/e'));
   }
 
   return scrapResult;

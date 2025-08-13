@@ -1,0 +1,55 @@
+<app-page heading="Paramètres">
+  <app-section heading="Valeurs de scraping">
+    <form [formGroup]="form" (ngSubmit)="saveSettings()" appForm>
+      <div class="row">
+        <label [for]="nameInput.id()">Cible du nom</label>
+
+        <app-control-container>
+          <input #nameInput="nativeControl" formControlName="nameTarget" appNativeControl />
+
+          @if (form.controls.nameTarget.invalid) {
+            <app-control-error>Requis</app-control-error>
+          }
+        </app-control-container>
+      </div>
+
+      <div class="row">
+        <label [for]="illustrationInput.id()">Cible de l'illustration</label>
+
+        <app-control-container>
+          <input
+            #illustrationInput="nativeControl"
+            formControlName="illustrationTarget"
+            appNativeControl
+          />
+
+          @if (form.controls.illustrationTarget.invalid) {
+            <app-control-error>Requis</app-control-error>
+          }
+        </app-control-container>
+      </div>
+
+      <div class="row">
+        <label [for]="instructionsInput.id()">Cible des instructions</label>
+
+        <app-control-container>
+          <input
+            #instructionsInput="nativeControl"
+            formControlName="instructionsTarget"
+            appNativeControl
+          />
+
+          @if (form.controls.instructionsTarget.invalid) {
+            <app-control-error>Requis</app-control-error>
+          }
+        </app-control-container>
+      </div>
+
+      <div class="submit-row">
+        <button [disabled]="form.invalid || unchanged()" type="submit" appButton>
+          Enregistrer
+        </button>
+      </div>
+    </form>
+  </app-section>
+</app-page>

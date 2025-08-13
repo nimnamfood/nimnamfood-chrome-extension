@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { inject, InjectionToken } from '@angular/core';
 
-export const WINDOW = new InjectionToken<Window>('An abstraction over global window object', {
+export const IT_WINDOW = new InjectionToken<Window>('IT_WINDOW', {
   factory: (): Window => {
     const { defaultView } = inject(DOCUMENT);
     if (!defaultView) {
@@ -12,5 +12,5 @@ export const WINDOW = new InjectionToken<Window>('An abstraction over global win
 });
 
 export function injectWindow(): Window {
-  return inject(WINDOW);
+  return inject(IT_WINDOW);
 }
