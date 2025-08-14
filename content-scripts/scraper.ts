@@ -6,6 +6,7 @@
         illustrationTarget: string;
         instructionsTarget: string;
       };
+
       const nameElementContent =
         document.querySelector(`.${input.nameTarget}`)?.textContent?.trim() ?? null;
       const [, name = '', portionsMatch = ''] =
@@ -16,8 +17,12 @@
         ? extractIllustrationUrl(illustrationElement)
         : null;
 
-      const instructionsElement = document.querySelector(`.${input.instructionsTarget}`);
+      const instructionsElement = getInstructionsElement(input.instructionsTarget);
       const instructions = instructionsElement ? extractInstructions(instructionsElement) : null;
+
+      if (!illustrationUrl || !instructions) {
+        throwFailedScrapingError();
+      }
 
       sendResponse({
         name,
@@ -37,7 +42,34 @@ function extractIllustrationUrl(element: Element): string | null {
   return match ? match[1] : null;
 }
 
+function getInstructionsElement(target: string): Element | null {
+  const landmarkElement = Array.from(document.querySelectorAll(`.${target}`)).find(
+    element => element.textContent?.trim() === 'Préparations',
+  );
+
+  if (!landmarkElement) {
+    throwFailedScrapingError();
+  }
+
+  let sibling = landmarkElement.nextElementSibling;
+
+  while (sibling && !sibling.querySelector('p')) {
+    sibling = sibling.nextElementSibling;
+  }
+
+  return sibling;
+}
+
 function extractInstructions(element: Element): string | null {
-  const instructionElements = Array.from(element.lastElementChild?.children ?? []);
-  return instructionElements.map(child => child.textContent).join('\n');
+  const paragraphs = Array.from(element.querySelectorAll('p'));
+
+  return paragraphs
+    .filter((_, index) => index !== paragraphs.length - 1)
+    .map(instructionParagraph => instructionParagraph.textContent?.trim())
+    .filter(Boolean)
+    .join('\n\n');
+}
+
+function throwFailedScrapingError(): never {
+  throw new Error('Scraping failed');
 }
