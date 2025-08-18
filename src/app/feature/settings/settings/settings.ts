@@ -11,7 +11,7 @@ import {
 import { Button } from '@/shared/components/button';
 import { combineLatest, distinctUntilChanged, map, startWith, Subject } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { SettingsService } from '@/core/settings';
+import { defaultSettings, SettingsService } from '@/core/settings';
 
 export type SettingsFormModel = {
   nameTarget: FormControl<string>;
@@ -60,7 +60,26 @@ export class Settings {
       this.saved$.pipe(startWith(null)),
     ]).pipe(
       map(([value]) => {
-        const { nameTarget, illustrationTarget, instructionsTarget } = this.settingsService.settings();
+        const { nameTarget, illustrationTarget, instructionsTarget } =
+          this.settingsService.settings();
+
+        return (
+          value.nameTarget === nameTarget &&
+          value.illustrationTarget === illustrationTarget &&
+          value.instructionsTarget === instructionsTarget
+        );
+      }),
+      distinctUntilChanged(),
+    ),
+    { requireSync: true },
+  );
+
+  protected readonly resetDisabled = toSignal(
+    this.form.valueChanges.pipe(
+      startWith(this.form.getRawValue()),
+      map(value => {
+        const { nameTarget, illustrationTarget, instructionsTarget } = defaultSettings;
+
         return (
           value.nameTarget === nameTarget &&
           value.illustrationTarget === illustrationTarget &&
@@ -75,5 +94,10 @@ export class Settings {
   protected saveSettings(): void {
     this.settingsService.saveSettings(this.form.getRawValue());
     this.saved$.next();
+  }
+
+  protected resetSettings(): void {
+    this.settingsService.saveSettings({ ...defaultSettings });
+    this.form.setValue({ ...defaultSettings });
   }
 }

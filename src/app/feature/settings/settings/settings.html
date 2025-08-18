@@ -46,6 +46,10 @@
       </div>
 
       <div class="submit-row">
+        <button [disabled]="resetDisabled()" (click)="resetSettings()" type="button" appButton>
+          Réinitialiser
+        </button>
+
         <button [disabled]="form.invalid || unchanged()" type="submit" appButton>
           Enregistrer
         </button>

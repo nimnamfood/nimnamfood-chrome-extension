@@ -7,11 +7,12 @@ import { ScrapingService } from './scraping-service';
 export const scrapResultResolver: ResolveFn<ScrapResult> = async (): Promise<
   ScrapResult | RedirectCommand
 > => {
+  const router = inject(Router);
   const scrapInput = inject(SettingsService).settings();
   const scrapResult = await inject(ScrapingService).scrap(scrapInput);
 
   if (!scrapResult) {
-    return new RedirectCommand(inject(Router).parseUrl('/e'));
+    return new RedirectCommand(router.parseUrl('/e'));
   }
 
   return scrapResult;
