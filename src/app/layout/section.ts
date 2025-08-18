@@ -4,6 +4,10 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   selector: 'app-section',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
+    :host {
+      display: block;
+    }
+
     h4 {
       margin-bottom: 0.5rem;
       font-weight: 500;

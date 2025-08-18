@@ -10,4 +10,8 @@ export class RecipeHttpRepository extends RecipeRepository {
   override create(recipe: CreateRecipeContract): Observable<Recipe> {
     return this.httpClient.post<Recipe>('/api/recipes', { ...recipe, tagIds: [], ingredients: [] });
   }
+
+  override search(search: string): Observable<Recipe[]> {
+    return this.httpClient.get<Recipe[]>('/api/recipes', { params: { q: search, limit: 5 } });
+  }
 }

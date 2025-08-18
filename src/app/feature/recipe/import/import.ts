@@ -1,9 +1,20 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Signal, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { injectScrapResult, provideScrapResult } from '@/core/scraping';
 import { NgOptimizedImage } from '@angular/common';
-import { finalize, of, switchMap, tap } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  finalize,
+  map,
+  of,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
+import { injectScrapResult, provideScrapResult } from '@/core/scraping';
 import { Button } from '@/shared/components/button';
 import {
   ControlContainer,
@@ -14,7 +25,7 @@ import { Page } from '@/layout/page';
 import { Section } from '@/layout/section';
 import { Form } from '@/layout/form';
 import { PortionsCounter } from '@/feature/recipe/import/portions-counter';
-import { RecipeRepository } from '@/core/recipe';
+import { Recipe, RecipeRepository } from '@/core/recipe';
 import { injectWindow } from '@/core/di';
 import { environment } from '@/env';
 import {
@@ -23,11 +34,13 @@ import {
   isValidIllustrationBlob,
 } from '@/core/illustration';
 
-export type RecipeFormModel = {
+type RecipeFormModel = {
   name: FormControl<string>;
   portionsCount: FormControl<number>;
   instructions: FormControl<string>;
 };
+
+type SimilarRecipe = Recipe & { url: string };
 
 @Component({
   selector: 'app-import',
@@ -69,10 +82,23 @@ export class Import {
     }),
   });
 
-  protected readonly loading = signal(false);
+  protected readonly similarRecipes: Signal<SimilarRecipe[] | undefined> = toSignal(
+    this.form.controls.name.valueChanges.pipe(
+      startWith(this.form.controls.name.value),
+      debounceTime(300),
+      filter(value => value.length > 2),
+      distinctUntilChanged(),
+      switchMap(value => this.recipeRepository.search(value)),
+      map(recipes =>
+        recipes.map(recipe => ({ ...recipe, url: `${environment.appUrl}/r/${recipe.id}` })),
+      ),
+    ),
+  );
+
+  protected readonly importing = signal(false);
 
   protected import(): void {
-    this.loading.set(true);
+    this.importing.set(true);
 
     fromPromise(fetch(this.scrapResult().illustrationUrl).then(result => result.blob()))
       .pipe(
@@ -94,7 +120,7 @@ export class Import {
           this.windowRef.open(`${environment.appUrl}/r/e/${recipe.id}`, '_blank');
         }),
         finalize(() => {
-          this.loading.set(false);
+          this.importing.set(false);
         }),
       )
       .subscribe();

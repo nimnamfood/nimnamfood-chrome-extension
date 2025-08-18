@@ -1,4 +1,16 @@
 <app-page heading="Importer une recette">
+  @let recipes = similarRecipes() ?? [];
+
+  @if (recipes.length > 0) {
+    <app-section heading="Recettes similaires existantes">
+      @for (recipe of recipes; track recipe.id) {
+        <div>
+          <a [href]="recipe.url" target="_blank">{{ recipe.name }}</a>
+        </div>
+      }
+    </app-section>
+  }
+
   <app-section heading="Résumé">
     <form [formGroup]="form" (ngSubmit)="import()" appForm>
       <div class="h-container">
@@ -35,7 +47,7 @@
       </div>
 
       <div class="submit-row">
-        <button [disabled]="loading() || form.invalid" type="submit" appButton>Importer</button>
+        <button [disabled]="importing() || form.invalid" type="submit" appButton>Importer</button>
       </div>
     </form>
   </app-section>
