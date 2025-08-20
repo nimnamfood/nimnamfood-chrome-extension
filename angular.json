@@ -46,6 +46,11 @@
             "styles": ["node_modules/modern-normalize/modern-normalize.css", "src/styles.scss"],
             "stylePreprocessorOptions": {
               "includePaths": ["src/styles"]
+            },
+            "optimization": {
+              "styles": {
+                "inlineCritical": false
+              }
             }
           },
           "configurations": {
