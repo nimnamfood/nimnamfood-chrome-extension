@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Nimnamfood",
   "description": "Recipe scrapper",
-  "version": "0.0.1",
+  "version": "1",
   "permissions": [],
   "content_scripts": [
     {
